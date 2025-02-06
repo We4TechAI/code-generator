@@ -163,13 +163,13 @@ The analyzer provides default thresholds for:
 2. **Test Code Generation:**
 
    ```bash
-   code-generator generate "add two numbers" add.py
+   python3 -m code_generator.cli generate "add two numbers" add.py
    ```
 
 3. **Test Code Analysis:**
 
    ```bash
-   code-generator analyze code_generator/generator.py
+   python3 -m code_generator.cli analyze existing_code.py
    ```
 
 ## Contributing
