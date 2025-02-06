@@ -1,9 +1,8 @@
-### Code Generator
-
+# Code Generator & Analyzer
 
 ![Banner](banner.png)
 
-A Python package to generate code from natural language suggestions using the Groq API. This package lets you quickly create code files from descriptive prompts, making it ideal for rapid prototyping and AI-assisted development.
+A Python package to generate and analyze code using the Groq API. This package lets you quickly create code files from descriptive prompts and analyze existing Python code for metrics and best practices, making it ideal for rapid prototyping and AI-assisted development.
 
 ## Table of Contents
 
@@ -12,6 +11,7 @@ A Python package to generate code from natural language suggestions using the Gr
 - [Usage](#usage)
   - [Command-Line Interface (CLI)](#command-line-interface-cli)
   - [Importing as a Module](#importing-as-a-module)
+- [Code Analysis](#code-analysis)
 - [Project Structure](#project-structure)
 - [Configuration](#configuration)
 - [Development & Testing](#development--testing)
@@ -20,10 +20,12 @@ A Python package to generate code from natural language suggestions using the Gr
 
 ## Features
 
-- **Easy Code Generation:** Generate code based on natural language prompts.
-- **File Output:** Write the generated code directly to a specified file.
-- **CLI and API Support:** Use via a command-line interface or import as a Python module.
-- **Configurable:** Customize model parameters like temperature, token limits, and more.
+- **Easy Code Generation:** Generate code based on natural language prompts
+- **Code Analysis:** Analyze Python code for metrics, complexity, and best practices
+- **Detailed Reports:** Generate markdown reports with code analysis insights
+- **File Management:** Write generated code and analysis reports to specified files
+- **CLI and API Support:** Use via command-line interface or import as a Python module
+- **Configurable:** Customize model parameters like temperature, token limits, and more
 
 ## Installation
 
@@ -41,100 +43,143 @@ A Python package to generate code from natural language suggestions using the Gr
    source venv/bin/activate
    ```
 
-3. **Install the Package in Editable Mode:**
+3. **Install the Package:**
 
    ```bash
-   pip install -e .
+   pip install .
    ```
 
-   *Note: This package depends on the `groq` library. Ensure that it is available via pip or install it separately if necessary.*
+4. **Add to PATH:**
+   
+   Add the following line to your ~/.bashrc file:
+   ```bash
+   export PATH="$HOME/.local/bin:$PATH"
+   ```
+   Then either start a new terminal or run:
+   ```bash
+   source ~/.bashrc
+   ```
 
 ## Usage
 
 ### Command-Line Interface (CLI)
 
-After installation, a console script named `code-generator` is available. You can generate code from a natural language prompt and write it to a file as follows:
+After installation, you can use the `code-generator` command in two ways:
 
-```bash
-code-generator "add two numbers" add.py
-```
+1. **Generate Code:**
+   ```bash
+   code-generator generate "add two numbers" add.py
+   ```
+   This will:
+   - Generate code based on the prompt "add two numbers"
+   - Write the generated code into add.py
 
-This command will:
-- Generate code based on the prompt `"add two numbers"`.
-- Write the generated code into `add.py`.
+2. **Analyze Code:**
+   ```bash
+   code-generator analyze existing_code.py
+   ```
+   This will:
+   - Analyze the Python file for various metrics
+   - Generate a detailed report in existingcodereadme.md
 
 ### Importing as a Module
 
-You can also use the package directly within your Python code:
+You can use the package directly within your Python code:
 
 ```python
+# For code generation
 from code_generator import CodeGenerator
 
-# Initialize the code generator
 generator = CodeGenerator()
-
-# Generate code for a given prompt
 generated_code = generator.generate_code("add two numbers")
-print("Generated Code:\n", generated_code)
-
-# Write the generated code to a file
 generator.write_code_to_file("add two numbers", "add.py")
+
+# For code analysis
+from code_generator import CodeAnalyzer
+
+analyzer = CodeAnalyzer()
+metrics = analyzer.analyze_file("existing_code.py")
+analyzer.generate_readme("existing_code.py", metrics)
 ```
+
+## Code Analysis
+
+The analyzer provides comprehensive code metrics including:
+
+- Lines of code
+- Function and class count
+- Import analysis
+- Cyclomatic complexity
+- Guidelines compliance
+- Recommendations for improvement
+
+Analysis reports include:
+- Code structure overview
+- Detailed function and class listings
+- Import dependencies
+- Complexity metrics
+- Best practices compliance
+- Improvement suggestions
 
 ## Project Structure
 
 ```
 code_generator/
 ├── code_generator
-│   ├── __init__.py         # Exposes the CodeGenerator class.
-│   ├── cli.py              # Command-line interface for code generation.
-│   └── generator.py        # Contains the CodeGenerator class.
-├── banner.png              # Project banner image (displayed in the README).
-├── setup.py                # Setup script for package installation.
-└── README.md               # This file.
+│   ├── __init__.py         # Package initialization
+│   ├── cli.py              # Command-line interface
+│   ├── generator.py        # Code generation functionality
+│   └── analyzer.py         # Code analysis functionality
+├── banner.png              # Project banner image
+├── setup.py                # Package installation script
+└── README.md              # Documentation
 ```
 
 ## Configuration
 
-You can configure the code generation process by modifying the parameters in `code_generator/generator.py`. Key parameters include:
-- `model`: The model name (default: `"llama-3.3-70b-versatile"`).
-- `temperature`: Controls randomness (default: `0.5`).
-- `max_tokens`: Maximum number of tokens for the generated code (default: `1024`).
-- `top_p`: Controls diversity via nucleus sampling (default: `1.0`).
+### Generator Configuration
+You can configure the code generation process by modifying the parameters in `CodeGenerator`:
+- `model`: Model name (default: "llama-3.3-70b-versatile")
+- `temperature`: Controls randomness (default: 0.5)
+- `max_tokens`: Maximum token limit (default: 1024)
+- `top_p`: Controls diversity (default: 1.0)
+
+### Analyzer Configuration
+The analyzer provides default thresholds for:
+- Function count (warning at > 10)
+- Cyclomatic complexity (warning at > 20)
+- Import count (warning at > 15)
 
 ## Development & Testing
 
-1. **Set Up a Virtual Environment (Recommended):**
+1. **Set Up Development Environment:**
 
    ```bash
    python3 -m venv venv
    source venv/bin/activate
-   ```
-
-2. **Install in Editable Mode:**
-
-   ```bash
    pip install -e .
    ```
 
-3. **Run the CLI Module Directly (for testing):**
+2. **Test Code Generation:**
 
    ```bash
-   python3 -m code_generator.cli "add two numbers" add.py
+   code-generator generate "add two numbers" add.py
    ```
 
-4. **Run Your Custom Test Scripts:**
+3. **Test Code Analysis:**
 
-   Create scripts or use your preferred test framework (e.g., `pytest`) to test the functionality of the package.
+   ```bash
+   code-generator analyze code_generator/generator.py
+   ```
 
 ## Contributing
 
 Contributions are welcome! To contribute:
 
-1. Fork the repository.
-2. Create a feature branch.
-3. Commit your changes.
-4. Open a pull request describing your changes.
+1. Fork the repository
+2. Create a feature branch
+3. Commit your changes
+4. Open a pull request
 
 Please ensure your code adheres to the project's style guidelines.
 
@@ -144,6 +189,4 @@ This project is licensed under the [MIT License](LICENSE).
 
 ---
 
-Happy coding!
-
-
+Happy coding! 🚀
